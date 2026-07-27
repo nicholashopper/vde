@@ -1,0 +1,163 @@
+@import './tokens.css';
+@import 'tailwindcss';
+
+/*
+ * Explicit source roots.
+ *
+ * Tailwind 4's automatic detection starts at the git repository root and falls
+ * back to the directory holding this file. That fallback is a silent failure
+ * here — src/renderer/styles/ contains no components, so an unversioned
+ * checkout builds a stylesheet with the tokens and NOT ONE utility class, and
+ * the app renders completely unstyled with no error anywhere.
+ *
+ * The forms below were determined empirically against tailwindcss 4.3.3,
+ * because two plausible-looking alternatives silently scan NOTHING: a bare
+ * directory path, and a pattern whose first segment is a recursive wildcard.
+ * Only a literal directory segment followed by a glob works.
+ *
+ * If you add a new directory of components, add it here too, and check the
+ * built stylesheet is tens of kB rather than about ten — a stylesheet that
+ * scanned nothing still builds, and still looks like a successful build.
+ */
+@source "../*.tsx";
+@source "../components/**/*.tsx";
+@source "../routes/*.tsx";
+@source "../lib/*.ts";
+
+/* Map the design tokens into Tailwind's theme so utilities stay on-system. */
+@theme inline {
+  --color-plane: var(--plane);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-inset: var(--surface-inset);
+
+  --color-ink: var(--ink-primary);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-gridline: var(--gridline);
+  --color-axis: var(--axis);
+
+  --color-good: var(--status-good);
+  --color-warning: var(--status-warning);
+  --color-serious: var(--status-serious);
+  --color-critical: var(--status-critical);
+
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-series-4: var(--series-4);
+  --color-series-5: var(--series-5);
+  --color-series-6: var(--series-6);
+  --color-series-7: var(--series-7);
+  --color-series-8: var(--series-8);
+
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+}
+
+@layer base {
+  * {
+    border-color: var(--hairline);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--plane);
+    color: var(--ink-primary);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+  }
+
+  /* Electron: the whole window is the app, never a document. */
+  body {
+    user-select: none;
+    cursor: default;
+  }
+
+  input,
+  textarea,
+  [data-selectable] {
+    user-select: text;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--hairline-strong);
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--ink-faint);
+    background-clip: content-box;
+  }
+}
+
+@layer components {
+  /* Hairline card. Recessive by default — the data is the loud part. */
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+  }
+
+  /* Numbers that must align in a column. Never on a hero figure. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Large standalone values: proportional figures, system sans. */
+  .figure {
+    font-variant-numeric: proportional-nums;
+    letter-spacing: -0.02em;
+    font-weight: 560;
+  }
+
+  .drag-region {
+    -webkit-app-region: drag;
+  }
+  .no-drag {
+    -webkit-app-region: no-drag;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

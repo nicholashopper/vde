@@ -1,0 +1,94 @@
+appId: dev.vde.app
+productName: VDE
+copyright: Copyright © 2026 Nicholas Hopper
+
+directories:
+  buildResources: build
+  output: release
+
+files:
+  - out/**
+  - package.json
+  - '!**/*.map'
+  - '!**/{.eslintrc,.editorconfig,.prettierrc,tsconfig*.json}'
+  - '!**/{test,tests,__tests__,spec,e2e}/**'
+
+# WASM cannot be loaded from inside an asar archive, and better-sqlite3's
+# prebuilt N-API binary must be a real file on disk. Both are unpacked.
+asarUnpack:
+  - '**/node_modules/better-sqlite3/**'
+  - '**/*.wasm'
+
+# The tree-sitter grammars and the web-tree-sitter runtime are addressed at
+# runtime via process.resourcesPath (see main/analyzer-host.ts).
+extraResources:
+  - from: node_modules/tree-sitter-wasms/out
+    to: grammars
+    filter: ['*.wasm']
+  - from: node_modules/web-tree-sitter
+    to: web-tree-sitter
+    filter: ['*.wasm', '*.js', 'package.json']
+
+mac:
+  category: public.app-category.developer-tools
+  target:
+    - target: dmg
+      arch: [arm64, x64]
+    - target: zip
+      arch: [arm64, x64]
+  icon: build/icon.icns
+  darkModeSupport: true
+  # Hardened runtime and notarization are required for distribution outside the
+  # App Store. They need an Apple Developer certificate in the keychain plus
+  # APPLE_ID / APPLE_APP_SPECIFIC_PASSWORD / APPLE_TEAM_ID in the environment.
+  # Left enabled so a properly credentialed build is signed by default; an
+  # uncredentialed local build simply produces an unsigned artefact.
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  notarize: false
+
+dmg:
+  artifactName: ${productName}-${version}-${arch}.${ext}
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+win:
+  target:
+    - target: nsis
+      arch: [x64, arm64]
+  icon: build/icon.ico
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+  createDesktopShortcut: always
+  shortcutName: VDE
+
+linux:
+  target:
+    - target: AppImage
+      arch: [x64, arm64]
+    - target: deb
+      arch: [x64, arm64]
+  category: Development
+  icon: build/icon.png
+  maintainer: Nicholas Hopper
+  synopsis: A 30,000ft view of the health of a vibecoded repository
+  desktop:
+    entry:
+      StartupWMClass: VDE
+
+# Publishing is deliberately unset. Auto-update stays inert until a real
+# target exists and builds are signed — see main/updater.ts.
+publish: null
+
+npmRebuild: false

@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    // page.evaluate() callbacks execute in the renderer, so these specs need
+    // both the DOM lib and the window.vde declaration from the preload types.
+    "lib": ["ES2023", "DOM"],
+    "types": ["node"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["./**/*.ts", "../../src/preload/index.d.ts", "../../src/shared/**/*"]
+}

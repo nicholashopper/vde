@@ -1,0 +1,206 @@
+/**
+ * VDE design tokens.
+ *
+ * The categorical, sequential, diverging and status values below are the
+ * validated data-visualisation palette. The dark categorical set was checked
+ * against VDE's own dark chart surface (#12120f) and passes all six gates:
+ *
+ *   lightness band  PASS   all 8 inside L 0.48–0.67
+ *   chroma floor    PASS   all 8 >= 0.1
+ *   CVD separation  PASS   worst adjacent #c98500↔#199e70 ΔE 8.4 (protan)
+ *   normal-vision   PASS   worst adjacent #d55181↔#c98500 ΔE 19.3
+ *   contrast        PASS   all 8 >= 3:1 against the surface
+ *
+ * Do not reorder the categorical slots. The ordering *is* the colour-blind
+ * safety mechanism — adjacent pairs were the thing under test. Re-run
+ * scripts/validate_palette.js before changing any value here.
+ *
+ * Status colours are fixed and never themed. They are never used for series
+ * identity, and never carry meaning without an accompanying icon or label.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* ---- surfaces & ink (dark, the default) ---- */
+  --plane: #0a0a08;
+  --surface-1: #12120f;
+  --surface-2: #1a1a17;
+  --surface-3: #232320;
+  --surface-inset: #0d0d0b;
+
+  --ink-primary: #ffffff;
+  --ink-secondary: #c3c2b7;
+  --ink-muted: #898781;
+  --ink-faint: #5c5b56;
+
+  --hairline: rgba(255, 255, 255, 0.08);
+  --hairline-strong: rgba(255, 255, 255, 0.14);
+  --gridline: #23231f;
+  --axis: #383835;
+
+  --focus-ring: #3987e5;
+
+  /* ---- categorical series (dark steps) ---- */
+  --series-1: #3987e5; /* blue */
+  --series-2: #d95926; /* orange */
+  --series-3: #199e70; /* aqua */
+  --series-4: #c98500; /* yellow */
+  --series-5: #d55181; /* magenta */
+  --series-6: #008300; /* green */
+  --series-7: #9085e9; /* violet */
+  --series-8: #e66767; /* red */
+  --series-other: #6b6a63;
+
+  /* ---- sequential ramp: one hue, light → dark ---- */
+  --seq-100: #cde2fb;
+  --seq-150: #b7d3f6;
+  --seq-200: #9ec5f4;
+  --seq-250: #86b6ef;
+  --seq-300: #6da7ec;
+  --seq-350: #5598e7;
+  --seq-400: #3987e5;
+  --seq-450: #2a78d6;
+  --seq-500: #256abf;
+  --seq-550: #1c5cab;
+  --seq-600: #184f95;
+  --seq-650: #104281;
+  --seq-700: #0d366b;
+
+  /* ---- diverging: warm/cool poles, neutral midpoint ---- */
+  --div-neg-3: #1c5cab;
+  --div-neg-2: #2a78d6;
+  --div-neg-1: #86b6ef;
+  --div-mid: #383835;
+  --div-pos-1: #e79a9a;
+  --div-pos-2: #d03b3b;
+  --div-pos-3: #9e2020;
+
+  /* ---- status (fixed, never themed, never a series) ---- */
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+
+  --status-good-wash: rgba(12, 163, 12, 0.14);
+  --status-warning-wash: rgba(250, 178, 25, 0.14);
+  --status-serious-wash: rgba(236, 131, 90, 0.14);
+  --status-critical-wash: rgba(208, 59, 59, 0.16);
+
+  /* Delta cues. Paired with an arrow glyph — never colour alone. */
+  --delta-worse: #d03b3b;
+  --delta-better: #0ca30c;
+  --delta-flat: #898781;
+
+  /* ---- type ---- */
+  --font-ui: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+  /* ---- geometry ---- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --data-end-radius: 4px;
+
+  --chrome-height: 44px;
+  --rail-width: 216px;
+}
+
+/* Light mode is a *selected* set of steps for the light surface, not a flip. */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --plane: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --surface-2: #f4f4f1;
+  --surface-3: #eceae5;
+  --surface-inset: #ffffff;
+
+  --ink-primary: #0b0b0b;
+  --ink-secondary: #52514e;
+  --ink-muted: #898781;
+  --ink-faint: #a9a7a0;
+
+  --hairline: rgba(11, 11, 11, 0.1);
+  --hairline-strong: rgba(11, 11, 11, 0.16);
+  --gridline: #e1e0d9;
+  --axis: #c3c2b7;
+
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --series-6: #008300;
+  --series-7: #4a3aa7;
+  --series-8: #e34948;
+  --series-other: #a9a7a0;
+
+  --div-mid: #f0efec;
+  --div-pos-1: #eda1a1;
+
+  --delta-better: #006300;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:where(:not([data-theme='dark'])) {
+    color-scheme: light;
+
+    --plane: #f9f9f7;
+    --surface-1: #fcfcfb;
+    --surface-2: #f4f4f1;
+    --surface-3: #eceae5;
+    --surface-inset: #ffffff;
+
+    --ink-primary: #0b0b0b;
+    --ink-secondary: #52514e;
+    --ink-muted: #898781;
+    --ink-faint: #a9a7a0;
+
+    --hairline: rgba(11, 11, 11, 0.1);
+    --hairline-strong: rgba(11, 11, 11, 0.16);
+    --gridline: #e1e0d9;
+    --axis: #c3c2b7;
+
+    --series-1: #2a78d6;
+    --series-2: #eb6834;
+    --series-3: #1baf7a;
+    --series-4: #eda100;
+    --series-5: #e87ba4;
+    --series-6: #008300;
+    --series-7: #4a3aa7;
+    --series-8: #e34948;
+    --series-other: #a9a7a0;
+
+    --div-mid: #f0efec;
+    --div-pos-1: #eda1a1;
+
+    --delta-better: #006300;
+  }
+}
+
+/**
+ * The accessibility texture channel. Opt-in only (settings, print, or
+ * forced-colors) — never decorative, never on by default. Used at 45° and its
+ * 135° mirror only.
+ */
+[data-texture='on'] .viz-fill--textured {
+  background-image: repeating-linear-gradient(
+    45deg,
+    currentColor 0 1px,
+    transparent 1px 5px
+  );
+}
+[data-texture='on'] .viz-fill--textured-alt {
+  background-image: repeating-linear-gradient(
+    135deg,
+    currentColor 0 1px,
+    transparent 1px 5px
+  );
+}
+
+@media print {
+  .viz-fill--textured {
+    background-image: repeating-linear-gradient(45deg, currentColor 0 1px, transparent 1px 5px);
+  }
+}
