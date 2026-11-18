@@ -4,6 +4,8 @@ A desktop app that gives you a 30,000ft view of the health of a vibecoded reposi
 
 Point it at a git repo. It reads the history and the files, and tells you where the rot is.
 
+Built by [Nicholas Hopper](https://nicholashopper.com).
+
 ---
 
 ## Why this exists
